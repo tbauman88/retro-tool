@@ -1,6 +1,6 @@
 import { Fragment, useState } from 'react';
 import { Listbox, Transition } from '@headlessui/react';
-import { CheckIcon, SelectorIcon } from '@heroicons/react/solid';
+import { CheckIcon, ChevronUpDownIcon } from '@heroicons/react/24/solid';
 import { useBoards } from '../hooks/boards';
 import { Button } from './Button';
 import { Board } from '@prisma/client';
@@ -39,7 +39,7 @@ export default function InportActionItems({ boardId }: ImportActionItemsProps) {
                   <span className="truncate">{selected?.title ?? 'Select one'}</span>
                 </span>
                 <span className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                  <SelectorIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                  <ChevronUpDownIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
                 </span>
               </Listbox.Button>
 

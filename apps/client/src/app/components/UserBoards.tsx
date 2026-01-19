@@ -2,7 +2,7 @@ import { useBoards, useDeleteBoard } from '../hooks/boards';
 import { Spinner } from './Spinner';
 import { Link } from 'react-router-dom';
 import { dateAgo } from '../utils/dates';
-import { ChevronRightIcon } from '@heroicons/react/solid';
+import { ChevronRightIcon } from '@heroicons/react/24/solid';
 import { Avatar, AvatarGroup } from './Avatar';
 import { Board } from '@prisma/client';
 import { useAuth } from '../contexts/AuthProvider';

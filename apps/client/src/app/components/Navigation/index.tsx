@@ -7,7 +7,7 @@ import { useActiveUsers } from '../../hooks/users';
 import { ContainerWidth, NavHeight } from '../../theme/sizes';
 import { Avatar, AvatarGroup } from '../Avatar';
 import { useColorPreferences } from '../../hooks/useDarkMode';
-import {FilterIcon, MoonIcon, SunIcon} from '@heroicons/react/solid';
+import {FunnelIcon, MoonIcon, SunIcon} from '@heroicons/react/24/solid';
 import { Button } from '../Button';
 import { Tooltip } from '../Tooltip';
 import { Timer } from '../Timer';
