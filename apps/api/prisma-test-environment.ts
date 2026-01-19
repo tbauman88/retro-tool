@@ -22,8 +22,8 @@ class PrismaTestEnvironment extends NodeEnvironment {
   private schemaName: string;
   private connection: any;
 
-  constructor(config) {
-    super(config);
+  constructor(config: any, context: any) {
+    super(config, context);
     this.schemaName = `test_${nanoid()}`;
     this.connection = process.env.TEST_DATABASE_URL.replace(
       'schema=public',

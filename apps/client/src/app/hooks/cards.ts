@@ -61,7 +61,7 @@ export type VoteCardArgs = {
 
 type GenericFunction = (...args: any[]) => any;
 function useDebounceWithCalls<T extends GenericFunction>(fn: T, timeout = 300) {
-  const timer = useRef<NodeJS.Timer>();
+  const timer = useRef<ReturnType<typeof setTimeout>>();
   const [calls, setCalls] = useState(1);
 
   const method = useCallback(

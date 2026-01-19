@@ -12,7 +12,8 @@
         "main": "apps/scripts/src/main.ts",
         "tsConfig": "apps/scripts/tsconfig.app.json",
         "target": "node",
-        "compiler": "tsc"
+        "compiler": "tsc",
+        "webpackConfig": "apps/scripts/webpack.config.js"
       },
       "configurations": {
         "production": {

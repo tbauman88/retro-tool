@@ -23,7 +23,7 @@ const applyMiddleware = (app: Express) => {
   if (process.env.NODE_ENV !== 'test') {
     app.use(cors());
   }
-  app.use(passport.initialize());
+  app.use(passport.initialize() as express.RequestHandler);
   app.use(express.json());
   app.use(helmet());
   Analytics.init(app);
