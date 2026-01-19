@@ -6,3 +6,6 @@ node_modules
 dist
 coverage
 apps/client-e2e/src/fixtures/userData.json
+
+.nx/cache
+.nx/workspace-data
