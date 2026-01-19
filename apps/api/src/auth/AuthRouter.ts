@@ -61,6 +61,7 @@ AuthRouter.get(
   passport.authenticate('github', {
     failureRedirect: '/login',
     failureFlash: false,
+    session: false,
   }),
   authController.callback,
 );
