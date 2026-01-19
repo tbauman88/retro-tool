@@ -16,8 +16,7 @@
         "assets": ["apps/client/src/_redirects", "apps/client/src/assets"],
         "styles": [],
         "scripts": [],
-        "webpackConfig": "apps/client/webpack.config.js",
-        "compiler": "babel"
+        "webpackConfig": "apps/client/webpack.config.js"
       },
       "configurations": {
         "production": {
