@@ -7,7 +7,7 @@
     ".eslintrc.json": "*"
   },
   "generators": {
-    "@nrwl/react": {
+    "@nx/react": {
       "application": {
         "style": "css",
         "linter": "eslint",
