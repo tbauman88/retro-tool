@@ -9,10 +9,10 @@ type ConfirmationDialogProps = {
 } & DialogProps;
 
 export default function ConfirmationDialog(props: ConfirmationDialogProps) {
-  const { active, onSuccess, closeDialog } = props;
-  const { register, handleSubmit, watch } = useForm();
+  const { onSuccess, closeDialog } = props;
+  const { register, handleSubmit, watch } = useForm<{ name: string }>();
 
-  const confirmDialog = (data: any) => {
+  const confirmDialog = (data: { name: string }) => {
     onSuccess?.(data.name);
     closeDialog();
   };

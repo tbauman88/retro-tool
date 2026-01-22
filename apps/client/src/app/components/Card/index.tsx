@@ -69,11 +69,6 @@ const InputContainer = styled.div`
   display: flex;
 `;
 
-const DragWrapper = styled.div`
-  position: relative;
-  width: 100%;
-`;
-
 const IconButton = styled.button`
   margin: 0 0.5rem;
 `;

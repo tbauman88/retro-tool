@@ -12,7 +12,7 @@ type BoardExportDialogProps = {
 } & DialogProps;
 
 export default function BoardExportDialog(props: BoardExportDialogProps) {
-  const { active, board, closeDialog } = props;
+  const { board, closeDialog } = props;
   const [, copy] = useCopyToClipboard();
   const queryClient = useQueryClient();
 

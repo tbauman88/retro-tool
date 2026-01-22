@@ -15,7 +15,7 @@ interface ImportActionItemsProps {
 
 export default function InportActionItems({ boardId }: ImportActionItemsProps) {
   const [selected, setSelected] = useState<Board | undefined>(undefined);
-  const { data, isLoading, refetch } = useBoards();
+  const { data } = useBoards();
   const importAction = useImportActionItems(boardId);
 
   const importFromOtherBoard = () => {

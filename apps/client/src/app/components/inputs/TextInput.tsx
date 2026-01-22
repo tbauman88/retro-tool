@@ -6,7 +6,7 @@ type TextInputProps = Omit<FormControlProps, 'children'> & {
   isLoading?: boolean;
 } & JSX.IntrinsicElements['input'];
 
-export const TextInput = forwardRef<any, TextInputProps>((props, ref) => {
+export const TextInput = forwardRef<HTMLInputElement, TextInputProps>((props, ref) => {
   const {
     isLoading,
     className,

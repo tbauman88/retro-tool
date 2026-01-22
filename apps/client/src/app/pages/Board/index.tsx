@@ -1,4 +1,4 @@
-import { Alert, AlertIcon, AlertTitle, Spinner } from '@chakra-ui/react';
+import { Spinner } from '@chakra-ui/react';
 import { Column as ColumnType } from '@prisma/client';
 import { useEffect, useState } from 'react';
 import {
@@ -9,27 +9,17 @@ import {
   DropResult,
 } from 'react-beautiful-dnd';
 import { useParams } from 'react-router-dom';
-import styled from 'styled-components';
 import { useBoard } from '../../hooks/boards';
 import { useColumns, useReorderColumn } from '../../hooks/columns';
 import { useBoardEvents } from '../../hooks/useBoardEvents';
 import { useUpdateCard } from '../../hooks/cards';
-import { ColumnWidth, NavHeight } from '../../theme/sizes';
+import { ColumnWidth } from '../../theme/sizes';
 import { BoardProvider } from '../../contexts/BoardProvider';
 import { Helmet } from 'react-helmet';
 import { Navigation } from '../../components/Navigation';
 import Column from '../../components/Column';
 import {Logo} from "../../components/Logo";
 import {Button} from "../../components/Button";
-
-const Wrapper = styled.div`
-  flex: 1;
-  display: flex;
-  flex-wrap: nowrap;
-  margin: 0 auto;
-  height: calc(100vh - ${NavHeight}px - 60px);
-  padding: 0 2rem;
-`;
 
 const order = (columns: ColumnType[]) =>
   columns.sort((a, b) => a.order - b.order);

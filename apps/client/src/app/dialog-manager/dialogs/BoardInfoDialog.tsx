@@ -10,7 +10,7 @@ type BoardInfoDialogProps = {
 } & DialogProps;
 
 export default function BoardInfoDialog(props: BoardInfoDialogProps) {
-  const { active, board, closeDialog } = props;
+  const { board, closeDialog } = props;
   const location = useLocation();
   const [, copy] = useCopyToClipboard();
 

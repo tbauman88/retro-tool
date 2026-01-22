@@ -5,16 +5,11 @@ import { apiClient } from '../api';
 import { environment } from '../../environments/environment.prod';
 import Cookies from 'js-cookie';
 
-interface LoginParams {
-  email: string;
-  password: string;
-}
-
 export interface AuthProviderState {
   user: User | undefined | null;
   userLoading: boolean;
   login(redirect?: string): void;
-  logout(): Promise<any>;
+  logout(): Promise<void>;
   logoutLoading: boolean;
 }
 

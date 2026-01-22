@@ -25,11 +25,13 @@ describe('Tooltip', () => {
     });
 
       expect(element).toBeDefined();
-      fireEvent.mouseOver(element!);
-      jest.advanceTimersByTime(5000);
-      expect(screen.getByText(tooltipValue)).toBeInTheDocument();
-      fireEvent.mouseLeave(element!);
-      jest.advanceTimersByTime(5000);
-      expect(screen.queryByText(tooltipValue)).not.toBeInTheDocument();
+      if (element) {
+        fireEvent.mouseOver(element);
+        jest.advanceTimersByTime(5000);
+        expect(screen.getByText(tooltipValue)).toBeInTheDocument();
+        fireEvent.mouseLeave(element);
+        jest.advanceTimersByTime(5000);
+        expect(screen.queryByText(tooltipValue)).not.toBeInTheDocument();
+      }
   });
 });

@@ -67,8 +67,8 @@ export const UserBoards = () => {
                         <div className="flex items-center text-sm text-gray-500">
                           <p>
                             Created{' '}
-                            <time dateTime={board.createdAt as any}>
-                              {dateAgo(board.createdAt as any)} ago
+                            <time dateTime={board.createdAt.toString()}>
+                              {dateAgo(board.createdAt)} ago
                             </time>
                           </p>
                         </div>

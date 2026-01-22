@@ -10,10 +10,10 @@ type UpdateTimerDialogProps = {
 } & DialogProps;
 
 export default function UpdateTimerDialog(props: UpdateTimerDialogProps) {
-  const { active, onSuccess, closeDialog, currentTime } = props;
-  const { register, handleSubmit, watch } = useForm();
+  const { onSuccess, closeDialog, currentTime } = props;
+  const { register, handleSubmit, watch } = useForm<{ minutes: number }>();
 
-  const confirmDialog = (data: any) => {
+  const confirmDialog = (data: { minutes: number }) => {
     onSuccess?.(data.minutes);
     closeDialog();
   };

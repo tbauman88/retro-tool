@@ -59,7 +59,7 @@ const RestartIcon = ({ className }: IconProps) => {
 
 export function Timer() {
   const { board } = useBoardState();
-  const { setTimerState } = useStartTimer(board!.id);
+  const { setTimerState } = useStartTimer(board?.id || '');
   const [timeRemaining, setTimeRemaining] = useState(0);
   const [defaultMinutes, setDefaultMinutes] = useState(5);
   const defaultTitle = useRef<string>();
@@ -173,25 +173,21 @@ export function Timer() {
       >
         {formatTime(timeRemaining)}
       </button>
-      {timeRemaining !== 0 && (
-        <>
-          {timer == null || timer?.type === 'paused' ? (
-            <button
-              className="px-2.5 py-1.5 hover:bg-gray-50 dark:bg-gray-600"
-              onClick={start}
-            >
-              <PlayIcon className={iconClasses} />
-            </button>
-          ) : (
-            <button
-              className="px-2.5 py-1.5 hover hover:bg-gray-50 dark:hover:bg-gray-600"
-              onClick={() => stop()}
-            >
-              <PauseIcon className={iconClasses} />
-            </button>
-          )}
-        </>
-      )}
+      {timeRemaining !== 0 && (timer == null || timer?.type === 'paused' ? (
+        <button
+          className="px-2.5 py-1.5 hover:bg-gray-50 dark:bg-gray-600"
+          onClick={start}
+        >
+          <PlayIcon className={iconClasses} />
+        </button>
+      ) : (
+        <button
+          className="px-2.5 py-1.5 hover hover:bg-gray-50 dark:hover:bg-gray-600"
+          onClick={() => stop()}
+        >
+          <PauseIcon className={iconClasses} />
+        </button>
+      ))}
       <button
         className="px-2.5 py-1.5 hover:bg-gray-50 dark:hover:bg-gray-600"
         onClick={() => reset()}

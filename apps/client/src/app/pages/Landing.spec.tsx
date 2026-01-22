@@ -46,8 +46,8 @@ const mockUseQueryParams = useQueryParams as jest.MockedFunction<
   typeof useQueryParams
 >;
 
-mockUseAuth.mockReturnValue({} as any);
-mockUseQueryParams.mockReturnValue({} as any);
+mockUseAuth.mockReturnValue({} as ReturnType<typeof useAuth>);
+mockUseQueryParams.mockReturnValue({} as ReturnType<typeof useQueryParams>);
 
 describe('Landing Page', () => {
   describe('Login', function () {
