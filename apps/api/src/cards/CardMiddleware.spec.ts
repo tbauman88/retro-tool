@@ -52,7 +52,7 @@ describe('CardMiddlware', () => {
       const response = {} as Response;
       const nextFunction = jest.fn();
 
-      expect(() =>
+      await expect(
         canEditCard(request, response, nextFunction),
       ).rejects.toEqual(expect.any(Error));
     });
@@ -65,7 +65,7 @@ describe('CardMiddlware', () => {
       const response = {} as Response;
       const nextFunction = jest.fn();
 
-      expect(() =>
+      await expect(
         canEditCard(request, response, nextFunction),
       ).rejects.toEqual(expect.any(Error));
     });
@@ -78,7 +78,7 @@ describe('CardMiddlware', () => {
       const response = {} as Response;
       const nextFunction = jest.fn();
 
-      expect(() =>
+      await expect(
         canEditCard(request, response, nextFunction),
       ).rejects.toEqual(expect.any(Error));
     });
@@ -107,7 +107,7 @@ describe('CardMiddlware', () => {
       const response = {} as Response;
       const nextFunction = jest.fn();
 
-      expect(() =>
+      await expect(
         canEditCard(request, response, nextFunction),
       ).rejects.toEqual(expect.any(Error));
     });

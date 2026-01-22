@@ -93,7 +93,7 @@ describe('AuthController', () => {
         .actingAs(user)
         .post(`/auth/impersonate/${user2.id}`);
 
-      expect(response.status).toBe(500);
+      expect(response.status).toBe(401);
     });
     it('will fail if selected user does not exist', async () => {
       const user = await prisma.user.create({
