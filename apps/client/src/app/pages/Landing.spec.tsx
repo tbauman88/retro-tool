@@ -34,7 +34,13 @@ jest.mock('react-router-dom', () => {
 const renderComponent = (route = '/') => {
   return render(
     <QueryClientProvider client={queryClient}>
-      <MemoryRouter initialEntries={[route]}>
+      <MemoryRouter
+        initialEntries={[route]}
+        future={{
+          v7_startTransition: true,
+          v7_relativeSplatPath: true,
+        }}
+      >
         <Landing />
       </MemoryRouter>
     </QueryClientProvider>,
