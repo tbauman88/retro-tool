@@ -6,8 +6,8 @@ export default {
     '^(?!.*\\.(js|jsx|ts|tsx|css|json)$)': '@nx/react/plugins/jest',
     '^.+\\.[tj]sx?$': 'babel-jest',
   },
+  transformIgnorePatterns: ['node_modules/(?!(query-string|decode-uri-component|split-on-first|filter-obj)/)'],
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
-  coverageReporters: ['text-summary', ['lcov', { projectRoot: '../../' }]],
   coverageDirectory: '../../coverage/apps/client',
   setupFilesAfterEnv: ['<rootDir>/jest-setup.ts'],
 };
