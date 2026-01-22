@@ -17,7 +17,7 @@
     "build": "NODE_ENV=production nx build",
     "test:api": "NODE_ENV=test nx test api",
     "test:client": "NODE_ENV=test nx test client",
-    "lint": "nx workspace-lint && nx lint",
+    "lint": "nx lint",
     "client:e2e": "nx e2e client-e2e",
     "e2e": "start-server-and-test start:api http://localhost:3333 client:e2e",
     "e2e:watch": "start-server-and-test start:api http://localhost:3333 'yarn client:e2e --watch'",
