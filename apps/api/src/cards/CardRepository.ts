@@ -68,7 +68,7 @@ export class CardRepository {
     });
   }
 
-  async updateCard(id: string, payload: any) {
+  async updateCard(id: string, payload: { parentId?: string; columnId?: string; [key: string]: unknown }) {
     const card = await prisma.card.update({
       where: {
         id,

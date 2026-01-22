@@ -83,25 +83,17 @@ describe('CardMiddlware', () => {
       ).rejects.toEqual(expect.any(Error));
     });
 
-    it('will throw an error if current user is not the card owner', async () => {
-      const differentOwner = await prisma.user.create({
+    it('will throw an error if current user is not the card owner or board owner', async () => {
+      const unauthorizedUser = await prisma.user.create({
         data: {
-          email: 'test2@example.com',
-          githubNickname: 'testUser2',
+          email: 'unauthorized@example.com',
+          githubNickname: 'unauthorizedUser',
           avatar: '',
         },
       });
-      const cardWithWrongOwner = await prisma.card.create({
-        data: {
-          content: '',
-          columnId: column.id,
-          ownerId: differentOwner.id,
-          order: 2,
-        },
-      });
       const request = {
-        params: { cardId: cardWithWrongOwner.id },
-        user,
+        params: { cardId: card.id },
+        user: unauthorizedUser,
       } as unknown as ApiRequest;
 
       const response = {} as Response;

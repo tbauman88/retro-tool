@@ -17,7 +17,7 @@ type Options = {
   allRawEmails?: string;
   userOrgsURL?: string;
 };
-type Verify = any;
+type Verify = OAuth2Strategy.VerifyFunction;
 
 function GithubStrategy(options: Options = {}, verify: Verify) {
   options.authorizationURL =
@@ -64,7 +64,7 @@ GithubStrategy.prototype.getEmails = function (accessToken: string) {
   });
 };
 
-function Profile(user: any, emails: any[], organizations: any[]) {
+function Profile(user: Record<string, unknown>, emails: Array<{ primary: boolean; email: string }>, organizations: Array<{ login: string }>) {
   return {
     id: user.id,
     githubNickname: user.login,

@@ -4,11 +4,11 @@ import { Response } from 'express';
 import { ApiRequest } from '../types/ApiRequest';
 
 class ResponseMock {
-  status(status: any) {
+  status(_status: number) {
     return this;
   }
 
-  json(data: any) {
+  json(_data: Record<string, unknown>) {
     return this;
   }
 }

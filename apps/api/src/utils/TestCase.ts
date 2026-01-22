@@ -6,7 +6,7 @@ import { generateJwtSecret } from './JwtService';
 
 export class TestCase {
   private supertest: ReturnType<typeof supertest>;
-  private headers: Record<string, any> = {};
+  private headers: Record<string, string> = {};
   constructor() {
     this.supertest = supertest(app);
   }

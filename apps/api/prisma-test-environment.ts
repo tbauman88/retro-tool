@@ -20,9 +20,9 @@ const prismaBinary = path.join(
 
 class PrismaTestEnvironment extends NodeEnvironment {
   private schemaName: string;
-  private connection: any;
+  private connection: string;
 
-  constructor(config: any, context: any) {
+  constructor(config: ConstructorParameters<typeof NodeEnvironment>[0], context: ConstructorParameters<typeof NodeEnvironment>[1]) {
     super(config, context);
     this.schemaName = `test_${nanoid()}`;
     this.connection = process.env.TEST_DATABASE_URL.replace(
@@ -48,7 +48,7 @@ class PrismaTestEnvironment extends NodeEnvironment {
       await client.query(`DROP SCHEMA IF EXISTS "${this.schemaName}" CASCADE`);
       await client.end();
       await prisma.$disconnect();
-    } catch (error) {
+    } catch {
       // doesn't matter as the environment is torn down
     }
   }

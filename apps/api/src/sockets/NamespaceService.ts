@@ -7,7 +7,7 @@ import { Namespace, Server, Socket } from 'socket.io';
 import { v4 as uuid } from 'uuid';
 import { tokenToUser } from '../utils/JwtService';
 
-interface NamespaceWithData extends Socket {
+export interface NamespaceWithData extends Socket {
   boardId: string;
   user: User;
 }
