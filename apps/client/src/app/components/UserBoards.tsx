@@ -68,7 +68,7 @@ export const UserBoards = () => {
                           <p>
                             Created{' '}
                             <time dateTime={board.createdAt.toString()}>
-                              {dateAgo(board.createdAt)} ago
+                              {dateAgo(board.createdAt.toISOString())} ago
                             </time>
                           </p>
                         </div>

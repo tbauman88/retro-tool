@@ -59,7 +59,8 @@ export type VoteCardArgs = {
   times: number;
 };
 
-type GenericFunction = (...args: unknown[]) => unknown;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type GenericFunction = (...args: any[]) => any;
 function useDebounceWithCalls<T extends GenericFunction>(fn: T, timeout = 300) {
   const timer = useRef<ReturnType<typeof setTimeout>>();
   const [calls, setCalls] = useState(1);

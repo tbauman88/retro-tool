@@ -13,7 +13,7 @@ import { useBoard } from '../../hooks/boards';
 import { useColumns, useReorderColumn } from '../../hooks/columns';
 import { useBoardEvents } from '../../hooks/useBoardEvents';
 import { useUpdateCard } from '../../hooks/cards';
-import { ColumnWidth } from '../../theme/sizes';
+import { ColumnWidth, NavHeight } from '../../theme/sizes';
 import { BoardProvider } from '../../contexts/BoardProvider';
 import { Helmet } from 'react-helmet';
 import { Navigation } from '../../components/Navigation';
