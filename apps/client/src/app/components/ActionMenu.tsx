@@ -6,18 +6,21 @@ export type ActionMenuItem = {
   title: string;
   action: () => void;
   active?: boolean;
+  testId?: string;
 };
 
 type ActionMenuProps = {
   items: ActionMenuItem[];
-  children?: ReactNode
+  children?: ReactNode;
+  testId?: string;
 };
 
-export default function ActionMenu({items, children}: ActionMenuProps) {
+export default function ActionMenu({items, children, testId}: ActionMenuProps) {
   return (
     <Menu as="div" className="relative inline-block text-left">
       <div>
-        {children ? <Menu.Button>{children}</Menu.Button> : <Menu.Button
+        {children ? <Menu.Button data-testid={testId}>{children}</Menu.Button> : <Menu.Button
+          data-testid={testId}
           className="inline-flex justify-center w-full p-2 text-sm font-medium text-white bg-black rounded-md bg-opacity-20 hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
           <EllipsisVerticalIcon className="w-5 h-5 text-violet-200 hover:text-violet-100" aria-hidden="true"/>
         </Menu.Button>}
@@ -39,6 +42,7 @@ export default function ActionMenu({items, children}: ActionMenuProps) {
                 {({active}) => (
                   <button
                     onClick={item.action}
+                    data-testid={item.testId}
                     className={`${
                       active ? 'bg-violet-500 text-indigo-500' : 'text-gray-900'
                     } group flex rounded-md items-center w-full px-2 py-2 text-sm gap-2`}

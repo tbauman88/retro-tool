@@ -155,10 +155,11 @@ export default function Column({ column, board, title, index }: ColumnProps) {
         ? {
             title: 'Delete Column',
             action: () => deleteColumn(column.id),
+            testId: `delete-column-${index}-button`,
           }
         : null,
     ].filter((a) => a != null) as ActionMenuItem[];
-  }, [column.id, deleteColumn, isBoardOwner]);
+  }, [column.id, deleteColumn, isBoardOwner, index]);
 
   const hasDraftCards = cards?.find((card) => card.draft === true) != null;
 
@@ -192,7 +193,7 @@ export default function Column({ column, board, title, index }: ColumnProps) {
                   Publish Cards
                 </button>
               )}
-              <ActionMenu items={ActionItems} />
+              <ActionMenu items={ActionItems} testId={`column-${index}-menu`} />
             </div>
           </div>
           <div>

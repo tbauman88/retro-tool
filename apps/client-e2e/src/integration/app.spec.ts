@@ -79,6 +79,7 @@ describe('client', () => {
     // Assert column exists
     cy.contains(columnName);
     // Delete column
+    cy.getBySel('column-0-menu').click(); // Open the menu first
     cy.getBySel('delete-column-0-button').click();
     cy.getBySel('confirm_yes').click();
     // Assert column is gone
