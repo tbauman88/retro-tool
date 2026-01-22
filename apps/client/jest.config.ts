@@ -6,7 +6,9 @@ export default {
     '^(?!.*\\.(js|jsx|ts|tsx|css|json)$)': '@nx/react/plugins/jest',
     '^.+\\.[tj]sx?$': 'babel-jest',
   },
-  transformIgnorePatterns: ['node_modules/(?!(query-string|decode-uri-component|split-on-first|filter-obj)/)'],
+  moduleNameMapper: {
+    '^query-string$': '<rootDir>/src/test-utils/query-string-mock.ts',
+  },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
   coverageDirectory: '../../coverage/apps/client',
   setupFilesAfterEnv: ['<rootDir>/jest-setup.ts'],
