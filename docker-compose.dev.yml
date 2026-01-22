@@ -45,23 +45,26 @@ services:
       - retro-tool
 
   migrations:
-    build:
-      context: .
-      dockerfile: Dockerfile.migrations
+    image: node:20
+    working_dir: /app
     depends_on:
       db:
         condition: service_healthy
     environment:
       DATABASE_URL: postgresql://user:password@db:5432/database?schema=public
+    volumes:
+      - .:/app
+      - node_modules:/app/node_modules
+    command: sh -c "yarn install && npx prisma generate && npx prisma migrate deploy"
     networks:
       - retro-tool
 
   api:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: node:20
+    working_dir: /app
     ports:
       - 3333:3333
+      - 9229:9229
     depends_on:
       db:
         condition: service_healthy
@@ -71,28 +74,37 @@ services:
         condition: service_started
     environment:
       DATABASE_URL: postgresql://user:password@db:5432/database?schema=public
+      TEST_DATABASE_URL: postgresql://user:password@db_test:5432/database?schema=public
       APP_PORT: 3333
-      NODE_ENV: production
+      DEBUG_PORT: 9229
+      NODE_ENV: development
       TOKEN_SECRET: ${TOKEN_SECRET:-randomSecret123}
       GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID}
       GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET}
-      GITHUB_CALLBACK_URL: ${GITHUB_CALLBACK_URL:-http://localhost/api/auth/github/callback}
-      SPA_URL: ${SPA_URL:-http://localhost}
-      USE_MOCK_AUTH: ${USE_MOCK_AUTH:-false}
+      GITHUB_CALLBACK_URL: ${GITHUB_CALLBACK_URL:-http://localhost:3333/auth/github/callback}
+      SPA_URL: ${SPA_URL:-http://localhost:4200}
+      USE_MOCK_AUTH: ${USE_MOCK_AUTH:-true}
       REDIS_CONNECTION_STRING: redis://redis:6379
+    volumes:
+      - .:/app
+      - node_modules:/app/node_modules
+    command: sh -c "yarn install && npx nx serve api"
     networks:
       - retro-tool
 
   client:
-    build:
-      context: .
-      dockerfile: Dockerfile.client
-      args:
-        NX_API_URL: ${NX_API_URL:-http://localhost/api}
+    image: node:20
+    working_dir: /app
     ports:
-      - 80:80
+      - 4200:4200
     depends_on:
       - api
+    environment:
+      NX_API_URL: http://localhost:3333
+    volumes:
+      - .:/app
+      - node_modules:/app/node_modules
+    command: sh -c "yarn install && npx nx serve client --host 0.0.0.0"
     networks:
       - retro-tool
 
@@ -105,4 +117,6 @@ volumes:
   postgres_data:
     driver: local
   postgres_test_data:
+    driver: local
+  node_modules:
     driver: local
