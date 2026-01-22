@@ -20,10 +20,10 @@ jobs:
       NX_API_URL: http://localhost:3333
       USE_MOCK_AUTH: true
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: 16.x
+          node-version: 20.x
           cache: 'yarn'
       - run: yarn install
       - run: yarn prisma db push
@@ -32,7 +32,7 @@ jobs:
       - run: yarn prisma migrate reset --force
         env:
           DATABASE_URL: 'postgresql://user:password@localhost:${{ job.services.postgres.ports[5432] }}/database?schema=public'
-      - uses: cypress-io/github-action@v2
+      - uses: cypress-io/github-action@v6
         name: Chrome
         env:
           DATABASE_URL: 'postgresql://user:password@localhost:${{ job.services.postgres.ports[5432] }}/database?schema=public'
@@ -40,13 +40,13 @@ jobs:
           browser: chrome
           install: false
           command: yarn e2e
-      - uses: actions/upload-artifact@v1
+      - uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: cypress-screenshots
           path: dist/cypress/apps/client-e2e/screenshots
       # Test run video was always captured, so this action uses "always()" condition
-      - uses: actions/upload-artifact@v1
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: cypress-videos

@@ -16,11 +16,11 @@ jobs:
       COOKIE_DOMAIN: localhost
       NX_API_URL: http://localhost:3333
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Use Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4
         with:
-          node-version: 16.x
+          node-version: 20.x
           cache: 'yarn'
       - run: yarn install
       - name: Check Lint
@@ -29,7 +29,7 @@ jobs:
         env:
           TEST_DATABASE_URL: 'postgresql://user:password@localhost:5432/database?schema=public'
         run: yarn test:api --codeCoverage --verbose
-      - uses: codecov/codecov-action@v2
+      - uses: codecov/codecov-action@v4
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           flags: api
