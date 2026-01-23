@@ -19,7 +19,7 @@
     "test:client": "NODE_ENV=test nx test client",
     "lint": "nx lint",
     "client:e2e": "nx e2e client-e2e",
-    "e2e": "start-server-and-test start:api http://localhost:3333 client:e2e",
+    "e2e": "start-server-and-test start:api http://localhost:3333 'yarn prisma db seed && yarn client:e2e'",
     "e2e:watch": "start-server-and-test start:api http://localhost:3333 'yarn client:e2e --watch'",
     "affected:apps": "nx affected:apps",
     "affected:libs": "nx affected:libs",
