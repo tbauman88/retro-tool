@@ -11,5 +11,6 @@ export default {
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
   coverageDirectory: '../../coverage/apps/client',
+  coverageReporters: ['lcov', 'text'],
   setupFilesAfterEnv: ['<rootDir>/jest-setup.ts'],
 };

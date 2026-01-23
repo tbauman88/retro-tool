@@ -32,6 +32,7 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           flags: api
+          files: ./coverage/apps/api/lcov.info
     services:
       postgres:
         image: postgres:13
