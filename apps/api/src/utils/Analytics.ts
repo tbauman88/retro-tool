@@ -34,7 +34,7 @@ export class Analytics {
     app.use(Sentry.Handlers.errorHandler())
   }
 
-  static handleSentryError(error: any) {
+  static handleSentryError(error: Error) {
     if(!process.env.SENTRY_DSN) return
     Sentry.captureException(error);
   }

@@ -1,8 +1,7 @@
-import { Checkbox } from '@chakra-ui/react';
-import { TrashIcon } from '@heroicons/react/outline';
+import { TrashIcon } from '@heroicons/react/24/outline';
 import { ActionItem } from '@prisma/client';
 import { DialogProps } from 'dialog-manager-react';
-import { ChangeEvent, ChangeEventHandler, useCallback, useEffect, useState } from 'react';
+import { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import ImportActionItems from '../../components/ImportActionItems';
 import { TextInput } from '../../components/inputs/TextInput';

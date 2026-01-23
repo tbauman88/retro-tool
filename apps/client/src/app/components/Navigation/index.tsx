@@ -4,28 +4,16 @@ import { useBoardState } from '../../contexts/BoardProvider';
 import { useDialogs } from '../../dialog-manager';
 import { useAddColumn } from '../../hooks/columns';
 import { useActiveUsers } from '../../hooks/users';
-import { ContainerWidth, NavHeight } from '../../theme/sizes';
 import { Avatar, AvatarGroup } from '../Avatar';
 import { useColorPreferences } from '../../hooks/useDarkMode';
-import {FilterIcon, MoonIcon, SunIcon} from '@heroicons/react/solid';
+import { MoonIcon, SunIcon } from '@heroicons/react/24/solid';
 import { Button } from '../Button';
 import { Tooltip } from '../Tooltip';
 import { Timer } from '../Timer';
 import { useActionItems } from '../../hooks/action-items';
-import {TextInput} from "../inputs/TextInput";
-import {useCopyToClipboard, useLocation} from "react-use";
+import { useCopyToClipboard, useLocation } from "react-use";
 import ActionMenu from "../ActionMenu";
-import {useUpdateBoard} from "../../hooks/boards";
-
-const NavigationWrapper = styled.div`
-  margin: 1rem auto;
-  width: 100%;
-  max-width: ${ContainerWidth}px;
-  height: ${NavHeight}px;
-  display: flex;
-  align-items: center;
-  flex: 0 auto;
-`;
+import { useUpdateBoard } from "../../hooks/boards";
 
 const AddColumnButton = styled.button`
   padding: 10px 20px;
@@ -37,16 +25,18 @@ const AvatarContainer = styled.div`
 
 export function Navigation() {
   const { board, isBoardOwner } = useBoardState();
-  const { mutateAsync: addColumnAsync } = useAddColumn(board!.id);
-  const { openDialog } = useDialogs();
-  const activeUsers = useActiveUsers(board!.id);
-  const { theme, toggleTheme } = useColorPreferences();
+  const { mutateAsync: addColumnAsync } = useAddColumn(board?.id || '');
+  const activeUsers = useActiveUsers(board?.id || '');
   const { data: actionItems } = useActionItems(board?.id);
+  const { updateBoard } = useUpdateBoard(board?.id)
+  const { openDialog } = useDialogs();
+  const { theme, toggleTheme } = useColorPreferences();
   const [, copy] = useCopyToClipboard();
   const location = useLocation()
-  const {updateBoard} = useUpdateBoard(board?.id)
 
-  const inviteCode = `${location.origin}/invites/${board?.inviteCode}`;
+  if (!board) return null;
+
+  const inviteCode = `${location.origin}/invites/${board.inviteCode}`;
 
   const DarkModeIcon = theme === 'dark' ? SunIcon : MoonIcon;
 
@@ -57,8 +47,6 @@ export function Navigation() {
       },
     });
   };
-
-  if (!board) return null;
 
   return (
     <div className="flex items-center flex-shrink px-4">
@@ -94,12 +82,12 @@ export function Navigation() {
       <ActionMenu items={[
         {
           title: 'Sort by Most Recent',
-          active: (board?.settings as any)?.sortBy === 'createdAt',
+          active: (board.settings as Record<string, string | undefined>)?.sortBy === 'createdAt',
           action: () => { updateBoard({ settings: { sortBy: 'createdAt' }})},
         },
         {
           title: 'Sort by Votes',
-          active: (board?.settings as any)?.sortBy === 'votes',
+          active: (board.settings as Record<string, string | undefined>)?.sortBy === 'votes',
           action: () => { updateBoard({ settings: { sortBy: 'votes' }})},
         }
       ]}>

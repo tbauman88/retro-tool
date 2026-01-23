@@ -5,8 +5,8 @@ import { User } from '@prisma/client';
 import { generateJwtSecret } from './JwtService';
 
 export class TestCase {
-  private supertest: supertest.SuperTest<supertest.Test>;
-  private headers: Record<string, any> = {};
+  private supertest: ReturnType<typeof supertest>;
+  private headers: Record<string, string> = {};
   constructor() {
     this.supertest = supertest(app);
   }

@@ -80,7 +80,7 @@ export class ActionItemController {
     });
 
     const items = await prisma.$transaction(
-      actionItems.map(({ id, ...item }) => {
+      actionItems.map(({ id: _id, ...item }) => {
         return prisma.actionItem.create({ data: { ...item, boardId } });
       }),
     );

@@ -7,7 +7,7 @@ const reorder = (
   columns: Column[],
   startIndex: number,
   endIndex: number,
-): any[] => {
+): Column[] => {
   const result = Array.from(columns);
   const [removed] = result.splice(startIndex, 1);
   result.splice(endIndex, 0, removed);

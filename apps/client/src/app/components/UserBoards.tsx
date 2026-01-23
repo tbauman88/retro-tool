@@ -1,10 +1,9 @@
-import { useBoards, useDeleteBoard } from '../hooks/boards';
+import { useBoards, useDeleteBoard, BoardWithAccesses } from '../hooks/boards';
 import { Spinner } from './Spinner';
 import { Link } from 'react-router-dom';
 import { dateAgo } from '../utils/dates';
-import { ChevronRightIcon } from '@heroicons/react/solid';
+import { ChevronRightIcon } from '@heroicons/react/24/solid';
 import { Avatar, AvatarGroup } from './Avatar';
-import { Board } from '@prisma/client';
 import { useAuth } from '../contexts/AuthProvider';
 import { useCallback } from 'react';
 import { useDialogs } from '../dialog-manager';
@@ -14,7 +13,7 @@ export const UserBoards = () => {
   const { user } = useAuth();
   const { deleteBoard } = useDeleteBoard();
   const { openDialog } = useDialogs();
-  const isBoardOwner = (board: Board) => {
+  const isBoardOwner = (board: BoardWithAccesses) => {
     return board.ownerId === user?.id;
   };
 
@@ -67,8 +66,8 @@ export const UserBoards = () => {
                         <div className="flex items-center text-sm text-gray-500">
                           <p>
                             Created{' '}
-                            <time dateTime={board.createdAt as any}>
-                              {dateAgo(board.createdAt as any)} ago
+                            <time dateTime={board.createdAt}>
+                              {dateAgo(board.createdAt)} ago
                             </time>
                           </p>
                         </div>

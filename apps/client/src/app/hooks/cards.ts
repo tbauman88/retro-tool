@@ -5,9 +5,12 @@ import { CardType } from '@retro-tool/api-interfaces';
 import { useCallback, useRef, useState } from 'react';
 
 export function useCards(columnId: string) {
-  const { data, isLoading, refetch } = useQuery(['cards', columnId], async () => {
-    const { data } = await apiClient.get('/cards', { params: { columnId } });
-    return data.cards as CardType[];
+  const { data, isLoading, refetch } = useQuery({
+    queryKey: ['cards', columnId],
+    queryFn: async () => {
+      const { data } = await apiClient.get('/cards', { params: { columnId } });
+      return data.cards as CardType[];
+    },
   });
   return {
     cards: data,
@@ -22,11 +25,13 @@ type CreateCardArgs = {
 };
 
 export function useCreateCard(columnId: string) {
-  const { mutateAsync, isLoading } = useMutation(async ({ content, draft }: CreateCardArgs) => {
-    const { data } = await apiClient.post('/cards', { columnId, content, draft });
-    return data.card as CardType;
+  const { mutateAsync, isPending } = useMutation({
+    mutationFn: async ({ content, draft }: CreateCardArgs) => {
+      const { data } = await apiClient.post('/cards', { columnId, content, draft });
+      return data.card as CardType;
+    },
   });
-  return { createCard: mutateAsync, createCardLoading: isLoading };
+  return { createCard: mutateAsync, createCardLoading: isPending };
 }
 
 export type UpdateCardArgs = {
@@ -35,15 +40,17 @@ export type UpdateCardArgs = {
 };
 
 export function useUpdateCard() {
-  const { mutateAsync, isLoading } = useMutation(async ({ cardId, payload }: UpdateCardArgs) => {
-    const { data } = await apiClient.post(`/cards/${cardId}`, {
-      payload,
-    });
-    return data.card;
+  const { mutateAsync, isPending } = useMutation({
+    mutationFn: async ({ cardId, payload }: UpdateCardArgs) => {
+      const { data } = await apiClient.post(`/cards/${cardId}`, {
+        payload,
+      });
+      return data.card;
+    },
   });
   return {
     updateCard: mutateAsync,
-    updateCardLoading: isLoading,
+    updateCardLoading: isPending,
   };
 }
 
@@ -52,9 +59,10 @@ export type VoteCardArgs = {
   times: number;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type GenericFunction = (...args: any[]) => any;
 function useDebounceWithCalls<T extends GenericFunction>(fn: T, timeout = 300) {
-  const timer = useRef<NodeJS.Timer>();
+  const timer = useRef<ReturnType<typeof setTimeout>>();
   const [calls, setCalls] = useState(1);
 
   const method = useCallback(
@@ -75,9 +83,10 @@ function useDebounceWithCalls<T extends GenericFunction>(fn: T, timeout = 300) {
 }
 
 export function useVoteCard(cardId: string) {
-  const { mutateAsync, isLoading } = useMutation(({ increment, times = 0 }: VoteCardArgs) =>
-    apiClient.post(`/cards/${cardId}/vote`, { increment, times }),
-  );
+  const { mutateAsync, isPending } = useMutation({
+    mutationFn: ({ increment, times = 0 }: VoteCardArgs) =>
+      apiClient.post(`/cards/${cardId}/vote`, { increment, times }),
+  });
 
   const [debouncedMutate, calls] = useDebounceWithCalls(mutateAsync);
 
@@ -90,29 +99,33 @@ export function useVoteCard(cardId: string) {
 
   return {
     voteCard,
-    voteLoading: isLoading,
+    voteLoading: isPending,
   };
 }
 
 export function useDeleteCard(cardId: string) {
-  const { mutateAsync, isLoading } = useMutation(() => apiClient.delete(`/cards/${cardId}`));
+  const { mutateAsync, isPending } = useMutation({
+    mutationFn: () => apiClient.delete(`/cards/${cardId}`),
+  });
   return {
     deleteCard: mutateAsync,
-    deleteCardLoading: isLoading,
+    deleteCardLoading: isPending,
   };
 }
 
 export function useFocusCard(cardId: string) {
-  const { mutateAsync, isLoading } = useMutation(() => apiClient.post(`/cards/${cardId}/focusCard`));
+  const { mutateAsync, isPending } = useMutation({
+    mutationFn: () => apiClient.post(`/cards/${cardId}/focusCard`),
+  });
   return {
     focusCard: mutateAsync,
-    focusCardLoading: isLoading,
+    focusCardLoading: isPending,
   };
 }
 
 export function usePublishCards(columnId: Column['id']) {
-  const { mutateAsync, isLoading } = useMutation(() => {
-    return apiClient.post('/bulk/cards/publish', { columnId });
+  const { mutateAsync, isPending } = useMutation({
+    mutationFn: () => apiClient.post('/bulk/cards/publish', { columnId }),
   });
-  return { publishCards: mutateAsync, publishCardsLoading: isLoading };
+  return { publishCards: mutateAsync, publishCardsLoading: isPending };
 }

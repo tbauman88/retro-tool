@@ -34,7 +34,13 @@ jest.mock('react-router-dom', () => {
 const renderComponent = (route = '/') => {
   return render(
     <QueryClientProvider client={queryClient}>
-      <MemoryRouter initialEntries={[route]}>
+      <MemoryRouter
+        initialEntries={[route]}
+        future={{
+          v7_startTransition: true,
+          v7_relativeSplatPath: true,
+        }}
+      >
         <Landing />
       </MemoryRouter>
     </QueryClientProvider>,
@@ -46,8 +52,8 @@ const mockUseQueryParams = useQueryParams as jest.MockedFunction<
   typeof useQueryParams
 >;
 
-mockUseAuth.mockReturnValue({} as any);
-mockUseQueryParams.mockReturnValue({} as any);
+mockUseAuth.mockReturnValue({} as ReturnType<typeof useAuth>);
+mockUseQueryParams.mockReturnValue({} as ReturnType<typeof useQueryParams>);
 
 describe('Landing Page', () => {
   describe('Login', function () {

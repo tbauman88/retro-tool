@@ -1,5 +1,4 @@
-import { Spinner } from '@chakra-ui/spinner';
-import { Alert, AlertIcon, AlertTitle } from '@chakra-ui/alert';
+import { Spinner, Alert, AlertIcon, AlertTitle } from '@chakra-ui/react';
 import { Navigate, useParams } from 'react-router-dom';
 import { useInvite } from '../../hooks/invites';
 

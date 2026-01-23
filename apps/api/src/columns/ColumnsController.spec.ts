@@ -1,6 +1,6 @@
 import { TestCase } from '../utils/TestCase';
 import { prisma } from '../prismaClient';
-import { COLUMNS_ROOT, COLUMNS_SINGULAR } from './ColumnsRouter';
+import { COLUMNS_SINGULAR } from './ColumnsRouter';
 import generatePath from '../utils/generatePath';
 import { Board, User } from '@prisma/client';
 
@@ -157,7 +157,7 @@ describe('ColumnsController', () => {
       },
     });
 
-    const card = await prisma.card.create({
+    const _card = await prisma.card.create({
       data: {
         content: '',
         ownerId: user.id,

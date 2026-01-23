@@ -1,12 +1,17 @@
+import { User } from '@prisma/client';
 import { useListUsers } from '../hooks/users';
 import { useAuth, useImporsonate } from '../contexts/AuthProvider';
 import { Spinner } from './Spinner';
 import { Button } from './Button';
 
+type UserWithCount = User & {
+  _count: { boardAccesses: number };
+};
+
 export const AdminUsersList = () => {
   const { users, usersLoading } = useListUsers();
-  const { impersonate, impersonateLoading } = useImporsonate();
-  const { user: currentUser, logout } = useAuth();
+  const { impersonate } = useImporsonate();
+  const { user: currentUser } = useAuth();
 
   if (usersLoading) {
     return (
@@ -22,7 +27,7 @@ export const AdminUsersList = () => {
         All Users
       </h2>
       <div className="bg-white shadow overflow-hidden sm:rounded-md">
-        <ul role="list" className="divide-y divide-gray-200">
+        <ul className="divide-y divide-gray-200">
           {users?.map((user) =>
             user.id === currentUser?.id ? null : (
               <li key={user.id}>
@@ -35,7 +40,7 @@ export const AdminUsersList = () => {
                             {user.githubNickname}
                           </p>
                           <p className="text-sm text-gray-500 ml-2">
-                            {(user as any)._count.boardAccesses} Boards
+                            {(user as UserWithCount)._count.boardAccesses} Boards
                           </p>
                         </div>
                       </div>

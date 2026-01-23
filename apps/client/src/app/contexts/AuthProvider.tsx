@@ -5,16 +5,11 @@ import { apiClient } from '../api';
 import { environment } from '../../environments/environment.prod';
 import Cookies from 'js-cookie';
 
-interface LoginParams {
-  email: string;
-  password: string;
-}
-
 export interface AuthProviderState {
   user: User | undefined | null;
   userLoading: boolean;
   login(redirect?: string): void;
-  logout(): Promise<any>;
+  logout(): Promise<void>;
   logoutLoading: boolean;
 }
 
@@ -29,17 +24,15 @@ export const AuthContext = createContext<AuthProviderState>({
 });
 
 export const useMe = () => {
-  return useQuery<User>(
-    ['currentUser'],
-    async () => {
+  return useQuery<User>({
+    queryKey: ['currentUser'],
+    queryFn: async () => {
       const { data } = await apiClient.get('/auth/me');
       return data.user as User;
     },
-    {
-      refetchInterval: false,
-      retry: false,
-    },
-  );
+    refetchInterval: false,
+    retry: false,
+  });
 };
 
 const useLogin = () => {
@@ -56,16 +49,16 @@ type ImpersonateArgs = {
 };
 
 export const useImporsonate = () => {
-  const { mutateAsync, isLoading } = useMutation(
-    async (args: ImpersonateArgs) => {
+  const { mutateAsync, isPending } = useMutation({
+    mutationFn: async (args: ImpersonateArgs) => {
       const response = await apiClient.post(`auth/impersonate/${args.userId}`);
       Cookies.set('impersonate_token', `Bearer ${response?.data?.token}`);
       window.location.reload();
     },
-  );
+  });
   return {
     impersonate: mutateAsync,
-    impersonateLoading: isLoading,
+    impersonateLoading: isPending,
   };
 };
 

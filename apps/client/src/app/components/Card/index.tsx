@@ -13,7 +13,7 @@ import {
   DraggingStyle,
   NotDraggingStyle,
 } from 'react-beautiful-dnd';
-import { MenuIcon, PencilAltIcon } from '@heroicons/react/outline';
+import { Bars3Icon, PencilSquareIcon } from '@heroicons/react/24/outline';
 import { eventEmitter } from '../../utils/EventEmitter';
 import { useBoardState } from '../../contexts/BoardProvider';
 import { Avatar } from '../Avatar';
@@ -21,7 +21,7 @@ import { classNames } from '../../utils/classNames';
 import { AlertBadge } from '../AlertBadge';
 import { Tooltip } from '../Tooltip';
 import { Textarea } from '../Textarea';
-import { ArrowDownIcon, ArrowUpIcon, EyeIcon, TrashIcon, ViewGridIcon } from '@heroicons/react/solid';
+import { ArrowDownIcon, ArrowUpIcon, EyeIcon, TrashIcon, Squares2X2Icon } from '@heroicons/react/24/solid';
 import { animate, AnimatePresence, motion } from 'framer-motion';
 import { useDialogs } from '../../dialog-manager';
 
@@ -59,7 +59,7 @@ const HoldBar = styled.div`
   background-color: ${primaryColor};
 `;
 
-const HoldIcon = styled(MenuIcon)`
+const HoldIcon = styled(Bars3Icon)`
   width: 20px;
   height: 20px;
   margin: 1rem 0.5rem;
@@ -67,11 +67,6 @@ const HoldIcon = styled(MenuIcon)`
 
 const InputContainer = styled.div`
   display: flex;
-`;
-
-const DragWrapper = styled.div`
-  position: relative;
-  width: 100%;
 `;
 
 const IconButton = styled.button`
@@ -101,8 +96,8 @@ const containerClasses = ({ isDragging, isGroupedOver, highlightCard }: Containe
   );
 };
 
-type CounterProps = { value: number };
-function Counter({ value }: CounterProps) {
+type CounterProps = { value: number; testId?: string };
+function Counter({ value, testId }: CounterProps) {
   const [current, setCurrent] = useState(value ?? 0);
   const nodeRef = useRef<HTMLParagraphElement>(null);
 
@@ -123,7 +118,7 @@ function Counter({ value }: CounterProps) {
     return () => controls.stop();
   }, [current, value]);
 
-  return <p ref={nodeRef} />;
+  return <p ref={nodeRef} data-testid={testId} />;
 }
 
 type CardWrapperProps = {
@@ -204,7 +199,7 @@ export const CardWrapper = ({ card, isDragging, isGroupedOver, hasChildren, inde
           <CardVotesButton onClick={() => voteCard({ increment: true })} data-testid={`upvote-button-${index}`}>
             <ArrowUpIcon className="w-6 h-6" />
           </CardVotesButton>
-          <Counter value={card.votes} />
+          <Counter value={card.votes} testId={`vote-count-${index}`} />
           <CardVotesButton onClick={() => voteCard({ increment: false })} data-testid={`downvote-button-${index}`}>
             <ArrowDownIcon className="w-6 h-6" />
           </CardVotesButton>
@@ -212,7 +207,7 @@ export const CardWrapper = ({ card, isDragging, isGroupedOver, hasChildren, inde
         <div className="flex items-center">
           {card.draft && (
             <Tooltip label="Draft card">
-              <PencilAltIcon className="w-4 h-4 mr-1" />
+              <PencilSquareIcon className="w-4 h-4 mr-1" />
             </Tooltip>
           )}
           {hasChildren && (
@@ -224,7 +219,7 @@ export const CardWrapper = ({ card, isDragging, isGroupedOver, hasChildren, inde
                   });
                 }}
               >
-                <ViewGridIcon className="w-4 h-4" />
+                <Squares2X2Icon className="w-4 h-4" />
               </button>
             </Tooltip>
           )}

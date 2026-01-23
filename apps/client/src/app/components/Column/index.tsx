@@ -11,7 +11,7 @@ import { useBoard } from '../../hooks/boards';
 import { useDialogs } from '../../dialog-manager';
 import { useDeleteColumn } from '../../hooks/columns';
 import { useCards, useCreateCard, usePublishCards } from '../../hooks/cards';
-import { KeyboardEvent, useEffect, useMemo, useRef, useState } from 'react';
+import { FormEvent, KeyboardEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Card } from '../Card';
 import { CardType } from '@retro-tool/api-interfaces';
 import { eventEmitter } from '../../utils/EventEmitter';
@@ -65,7 +65,7 @@ export function CardList({ cards, column, listType, listId, name }: CardsListPro
   }, []);
 
   const sort = useMemo<[string, 'asc' | 'desc']>(() => {
-    const value = (board?.settings as Record<string, any>)?.sortBy ?? 'createdAt'
+    const value = (board?.settings as Record<string, string | undefined>)?.sortBy ?? 'createdAt'
     return [value, value === 'createdAt' ? 'asc' as const : 'desc' as const]
   }, [board?.settings])
 
@@ -76,7 +76,7 @@ export function CardList({ cards, column, listType, listId, name }: CardsListPro
       {(dropProvided: DroppableProvided, dropSnapshot: DroppableStateSnapshot) => (
         <div
           className={containerClasses(dropSnapshot.isDraggingOver)}
-          ref={(ref: any) => {
+          ref={(ref: HTMLDivElement | null) => {
             dropProvided.innerRef(ref);
             cardsContainerRef.current = ref;
           }}
@@ -116,7 +116,7 @@ export default function Column({ column, board, title, index }: ColumnProps) {
     return cards?.filter((card) => card.parentId == null) ?? [];
   }, [cards]);
 
-  const submitCard = async (event: any) => {
+  const submitCard = async (event: FormEvent) => {
     event.preventDefault();
     if (!newCardRef.current || !newCardRef.current.value?.length) return;
 
@@ -128,7 +128,7 @@ export default function Column({ column, board, title, index }: ColumnProps) {
     newCardRef.current.value = '';
   };
 
-  const deleteColumn = async (columnId: string) => {
+  const deleteColumn = useCallback(async (columnId: string) => {
     openDialog('confirmation', {
       title: 'Are you sure?',
       message: 'Are you sure you want to delete the column?',
@@ -139,7 +139,7 @@ export default function Column({ column, board, title, index }: ColumnProps) {
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       onCancel: () => {},
     });
-  };
+  }, [openDialog, deleteColumnAsync, refetch]);
 
   const onInputKeyPress = (e: KeyboardEvent<HTMLTextAreaElement>) => {
     if (!e.shiftKey && e.code === 'Enter') {
@@ -155,10 +155,11 @@ export default function Column({ column, board, title, index }: ColumnProps) {
         ? {
             title: 'Delete Column',
             action: () => deleteColumn(column.id),
+            testId: `delete-column-${index}-button`,
           }
         : null,
     ].filter((a) => a != null) as ActionMenuItem[];
-  }, [column.id, deleteColumn, isBoardOwner]);
+  }, [column.id, deleteColumn, isBoardOwner, index]);
 
   const hasDraftCards = cards?.find((card) => card.draft === true) != null;
 
@@ -192,7 +193,7 @@ export default function Column({ column, board, title, index }: ColumnProps) {
                   Publish Cards
                 </button>
               )}
-              <ActionMenu items={ActionItems} />
+              <ActionMenu items={ActionItems} testId={`column-${index}-menu`} />
             </div>
           </div>
           <div>

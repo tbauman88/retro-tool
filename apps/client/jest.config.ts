@@ -3,11 +3,13 @@ export default {
   displayName: 'client',
   preset: '../../jest.preset.js',
   transform: {
-    '^(?!.*\\.(js|jsx|ts|tsx|css|json)$)': '@nrwl/react/plugins/jest',
+    '^(?!.*\\.(js|jsx|ts|tsx|css|json)$)': '@nx/react/plugins/jest',
     '^.+\\.[tj]sx?$': 'babel-jest',
   },
+  moduleNameMapper: {
+    '^query-string$': '<rootDir>/src/test-utils/query-string-mock.ts',
+  },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
-  coverageReporters: ['text-summary', ['lcov', { projectRoot: '../../' }]],
   coverageDirectory: '../../coverage/apps/client',
   setupFilesAfterEnv: ['<rootDir>/jest-setup.ts'],
 };

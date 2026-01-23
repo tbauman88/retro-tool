@@ -1,3 +1,4 @@
+import { Prisma } from '@prisma/client';
 import { prisma } from '../prismaClient';
 import dependencies from "../dependencies";
 import {BOARD_UPDATED_EVENT_NAME} from "@retro-tool/api-interfaces";
@@ -12,10 +13,10 @@ export class BoardRepository {
     });
   }
 
-  async updateTimerState(id: string, state: any) {
+  async updateTimerState(id: string, state: Prisma.InputJsonValue) {
     const board = await prisma.board.update({
       where: { id },
-      data: {timer: state}
+      data: { timer: state as Prisma.InputJsonValue }
     })
 
     dependencies.namespaceService.sendEventToBoard(board.id, {

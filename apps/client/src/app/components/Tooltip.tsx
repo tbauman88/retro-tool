@@ -7,7 +7,7 @@ type TooltipProps = {
   children: ReactNode;
 };
 
-export function isString(value: any): value is string {
+export function isString(value: unknown): value is string {
   return Object.prototype.toString.call(value) === '[object String]';
 }
 

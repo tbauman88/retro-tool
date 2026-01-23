@@ -5,7 +5,8 @@ const actual = jest.requireActual('framer-motion');
 // https://github.com/framer/motion/blob/main/src/render/dom/motion.ts
 function custom<Props>(
   Component: string | React.ComponentType<Props>,
-  _customMotionComponentConfig: any = {},
+  _customMotionComponentConfig: Record<string, unknown> = {},
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): any {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
@@ -41,8 +42,6 @@ const motion = new Proxy(custom, {
 module.exports = {
   __esModule: true,
   ...actual,
-  AnimatePresence: ({ children }: { children: React.ReactChildren }) => (
-    <>{children}</>
-  ),
+  AnimatePresence: ({ children }: { children: React.ReactChildren }) => children,
   motion,
 };

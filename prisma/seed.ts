@@ -1,5 +1,5 @@
 import { prisma } from './../apps/api/src/prismaClient';
-import faker from 'faker'
+import { faker } from '@faker-js/faker'
 import { v4 } from 'uuid'
 
 async function findOrCreateUser(email: string) {

@@ -110,7 +110,7 @@ export class BoardsController {
     const state = req.body.timer as StartState | PausedState;
 
     if (board.timer && state.type === 'start') {
-      if ((board.timer as any).type === 'start') {
+      if ((board.timer as Record<string, unknown>).type === 'start') {
         throw new ApiError('Timer has already been started.');
       }
     }

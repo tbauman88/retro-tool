@@ -6,14 +6,14 @@ import { v4 as uuid } from 'uuid';
 import { Column } from '@prisma/client';
 
 export const useColumns = (boardId?: string) => {
-  const { data, isLoading } = useQuery(
-    ['columns', boardId],
-    async () => {
+  const { data, isLoading } = useQuery({
+    queryKey: ['columns', boardId],
+    queryFn: async () => {
       const { data } = await apiClient.get(`/boards/${boardId}/columns`);
       return data.columns as Column[];
     },
-    { enabled: Boolean(boardId) },
-  );
+    enabled: Boolean(boardId),
+  });
   return {
     columns: data,
     columnsLoading: isLoading,
@@ -24,9 +24,11 @@ export type AddColumnParams = {
   title: string;
 };
 export const useAddColumn = (boardId: string) => {
-  return useMutation(async (params: AddColumnParams) => {
-    const { data } = await apiClient.post(`/boards/${boardId}/columns`, params);
-    return data.column as Column;
+  return useMutation({
+    mutationFn: async (params: AddColumnParams) => {
+      const { data } = await apiClient.post(`/boards/${boardId}/columns`, params);
+      return data.column as Column;
+    },
   });
 };
 
@@ -36,9 +38,10 @@ type DeleteColumnParams = {
 
 export const useDeleteColumn = () => {
   const { board } = useBoardState();
-  return useMutation(({ columnId }: DeleteColumnParams) =>
-    apiClient.delete(`/boards/${board?.id}/columns/${columnId}`),
-  );
+  return useMutation({
+    mutationFn: ({ columnId }: DeleteColumnParams) =>
+      apiClient.delete(`/boards/${board?.id}/columns/${columnId}`),
+  });
 };
 
 export type ReorderColumnArgs = {
@@ -48,12 +51,14 @@ export type ReorderColumnArgs = {
 
 export const useReorderColumn = (boardId?: string) => {
   const { addIgnoreId } = useIgnoredEvents();
-  return useMutation((args: ReorderColumnArgs) => {
-    const eventTrackingId = uuid();
-    addIgnoreId(eventTrackingId);
-    return apiClient.post(`/boards/${boardId}/columns/reorder`, {
-      eventTrackingId,
-      ...args,
-    });
+  return useMutation({
+    mutationFn: (args: ReorderColumnArgs) => {
+      const eventTrackingId = uuid();
+      addIgnoreId(eventTrackingId);
+      return apiClient.post(`/boards/${boardId}/columns/reorder`, {
+        eventTrackingId,
+        ...args,
+      });
+    },
   });
 };

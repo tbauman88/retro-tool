@@ -1,8 +1,6 @@
 import { Board, Card, Column, User } from '@prisma/client';
 import { QueryClient } from '@tanstack/react-query';
 
-const NL = '\n';
-
 type CardWithOwner = Card & {
   owner: User;
 };

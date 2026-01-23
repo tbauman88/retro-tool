@@ -1,6 +1,4 @@
 import { ChangeEvent, useCallback, useEffect, useRef, useState } from 'react';
-import styled, { css } from 'styled-components';
-import { classNames } from '../utils/classNames';
 
 type TextareaProps = {
   value: string;
@@ -12,16 +10,6 @@ type TextareaProps = {
   onBlur?: () => void;
 };
 
-type TextAreaWrapperProps = {
-  $disabled?: boolean;
-};
-const TextAreaWrapper = styled.textarea<TextAreaWrapperProps>`
-  width: 100%;
-  ${({ $disabled }) => css`
-    cursor: ${$disabled ? 'auto' : 'text'};
-  `}
-`;
-
 export function Textarea({
   value: defaultValue,
   className,
@@ -32,12 +20,6 @@ export function Textarea({
   const [value, setValue] = useState(defaultValue);
   const [isFocused, setIsFocused] = useState(false);
   const ref = useRef<HTMLTextAreaElement>(null);
-
-  const classes = classNames(
-    className,
-    'w-full',
-    (disabled || readonly) && 'cursor-text pointer-events-none',
-  );
 
   useEffect(() => {
     if (!isFocused && value !== defaultValue) {

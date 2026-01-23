@@ -1,6 +1,6 @@
 import EventEmitter from 'eventemitter3';
-import { NamespaceService } from './NamespaceService';
-import { Server } from 'socket.io';
+import { NamespaceService, NamespaceWithData } from './NamespaceService';
+import { Namespace, Server, Socket } from 'socket.io';
 import { Board, User } from '.prisma/client';
 import { prisma } from '../prismaClient';
 import { generateJwtSecret } from '../utils/JwtService';
@@ -13,6 +13,14 @@ class MockIO extends EventEmitter {
   disconnect() {
     return this;
   }
+}
+
+function createMockSocket(overrides: {
+  nsp?: { name: string };
+  handshake?: { auth: { token: string } };
+}): Socket {
+  const socket = new MockIO();
+  return Object.assign(socket, overrides) as unknown as Socket;
 }
 
 describe('NamespaceService', () => {
@@ -33,12 +41,10 @@ describe('NamespaceService', () => {
 
   it('will disconnect if there is no token', async () => {
     const boardId = 'boardId';
-    const socket = new MockIO() as any;
+    const socket = createMockSocket({
+      nsp: { name: `/boards/${boardId}` },
+    });
     const disconnectSpy = jest.spyOn(socket, 'disconnect');
-
-    socket.nsp = {
-      name: `/boards/${boardId}`,
-    };
 
     await service.onConnection(socket);
     expect(disconnectSpy).toHaveBeenCalled();
@@ -46,18 +52,11 @@ describe('NamespaceService', () => {
 
   it('will disconnect if there is no valid token', async () => {
     const boardId = 'boardId';
-    const socket = new MockIO() as any;
+    const socket = createMockSocket({
+      handshake: { auth: { token: `Bearer random-token` } },
+      nsp: { name: `/boards/${boardId}` },
+    });
     const disconnectSpy = jest.spyOn(socket, 'disconnect');
-
-    socket.handshake = {
-      auth: {
-        token: `Bearer random-token`,
-      },
-    };
-
-    socket.nsp = {
-      name: `/boards/${boardId}`,
-    };
 
     await service.onConnection(socket);
     expect(disconnectSpy).toHaveBeenCalled();
@@ -65,17 +64,10 @@ describe('NamespaceService', () => {
 
   it('will add new client when a connection is made', async () => {
     const boardId = 'boardId';
-    const socket = new MockIO() as any;
-
-    socket.handshake = {
-      auth: {
-        token: `Bearer ${generateJwtSecret(user)}`,
-      },
-    };
-
-    socket.nsp = {
-      name: `/boards/${boardId}`,
-    };
+    const socket = createMockSocket({
+      handshake: { auth: { token: `Bearer ${generateJwtSecret(user)}` } },
+      nsp: { name: `/boards/${boardId}` },
+    });
 
     await service.onConnection(socket);
 
@@ -86,37 +78,23 @@ describe('NamespaceService', () => {
 
   it('will disconnect the client if the url is wrong', async () => {
     const boardId = 'boardId';
-    const socket = new MockIO() as any;
-    socket.disconnect = jest.fn();
-
-    socket.handshake = {
-      auth: {
-        token: `Bearer ${generateJwtSecret(user)}`,
-      },
-    };
-
-    socket.nsp = {
-      name: `/wrong-url/${boardId}`,
-    };
+    const socket = createMockSocket({
+      handshake: { auth: { token: `Bearer ${generateJwtSecret(user)}` } },
+      nsp: { name: `/wrong-url/${boardId}` },
+    });
+    const disconnectSpy = jest.spyOn(socket, 'disconnect');
 
     await service.onConnection(socket);
 
-    expect(socket.disconnect).toHaveBeenCalledTimes(1);
+    expect(disconnectSpy).toHaveBeenCalledTimes(1);
   });
 
   it('will remove a client when a connection terminated', async () => {
     const boardId = 'boardId';
-    const socket = new MockIO() as any;
-
-    socket.handshake = {
-      auth: {
-        token: `Bearer ${generateJwtSecret(user)}`,
-      },
-    };
-
-    socket.nsp = {
-      name: `/boards/${boardId}`,
-    };
+    const socket = createMockSocket({
+      handshake: { auth: { token: `Bearer ${generateJwtSecret(user)}` } },
+      nsp: { name: `/boards/${boardId}` },
+    });
 
     await service.onConnection(socket);
 
@@ -124,7 +102,7 @@ describe('NamespaceService', () => {
       expect.arrayContaining([expect.objectContaining({ boardId })]),
     );
 
-    socket.emit('disconnect');
+    (socket as unknown as EventEmitter).emit('disconnect');
     expect([...service.clients.values()]).toEqual([]);
   });
 
@@ -134,7 +112,7 @@ describe('NamespaceService', () => {
       boardId: boardId,
       emit: jest.fn(),
     };
-    service.clients.set('random-id', client as any);
+    service.clients.set('random-id', client as unknown as NamespaceWithData);
     const payload = { test: true } as unknown as Board;
     service.sendEventToBoard(boardId, {
       type: 'events/BOARD_UPDATED',
@@ -160,8 +138,8 @@ describe('NamespaceService', () => {
       emit: jest.fn(),
     };
 
-    service.clients.set('random-id', client as any);
-    service.clients.set('random-id2', notOurClient as any);
+    service.clients.set('random-id', client as unknown as NamespaceWithData);
+    service.clients.set('random-id2', notOurClient as unknown as NamespaceWithData);
     const payload = { test: true } as unknown as Board;
     service.sendEventToUser(client.user.id, boardId, {
       type: 'events/BOARD_UPDATED',
@@ -180,16 +158,16 @@ describe('NamespaceService', () => {
 
     const emit = jest.fn();
     const notCalledEmit = jest.fn();
-    service.namespace = { emit } as any;
+    service.namespace = { emit } as unknown as Namespace;
 
-    service.clients.set('id-1', { boardId, user: { id: '1' }, emit } as any);
-    service.clients.set('id-2', { boardId, user: { id: '1' }, emit } as any);
-    service.clients.set('id-3', { boardId, user: { id: '2' }, emit } as any);
+    service.clients.set('id-1', { boardId, user: { id: '1' }, emit } as unknown as NamespaceWithData);
+    service.clients.set('id-2', { boardId, user: { id: '1' }, emit } as unknown as NamespaceWithData);
+    service.clients.set('id-3', { boardId, user: { id: '2' }, emit } as unknown as NamespaceWithData);
     service.clients.set('id-4', {
       boardId: 'different-board-id',
       user: { id: '3' },
       emit: notCalledEmit,
-    } as any);
+    } as unknown as NamespaceWithData);
 
     await service.emitUserRoom(boardId);
 

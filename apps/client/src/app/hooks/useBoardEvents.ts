@@ -23,7 +23,6 @@ import Cookies from 'js-cookie';
 import { environment } from '../../environments/environment.prod';
 import update from 'immutability-helper';
 import { eventEmitter } from '../utils/EventEmitter';
-import { lowerFirst } from 'lodash';
 
 type EventType = SocketEvents & { eventTrackingId?: string };
 

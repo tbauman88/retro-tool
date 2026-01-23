@@ -360,7 +360,7 @@ describe('CardsController', () => {
         .spyOn(dependencies.namespaceService, 'sendEventToBoard')
         .mockImplementation(jest.fn());
 
-      const card1 = await prisma.card.create({
+      const _card1 = await prisma.card.create({
         data: {
           ownerId: user.id,
           columnId: column.id,

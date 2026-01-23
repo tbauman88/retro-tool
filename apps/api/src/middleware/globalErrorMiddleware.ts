@@ -6,7 +6,7 @@ import {AuthenticationError} from "../errors/AuthenticationError";
 import {Analytics} from "../utils/Analytics";
 
 export const buildError = (type: string, error: Error) => {
-  const response: any = {
+  const response: { error: string; message: string; trace?: string } = {
     error: type,
     message: error.message
   }

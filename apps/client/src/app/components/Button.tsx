@@ -33,7 +33,10 @@ export type ButtonProps = {
   isLoading?: boolean;
 } & (LinkButton | ButtonButton);
 
-export const Button = forwardRef<any, ButtonProps>(
+export const Button = forwardRef<
+  HTMLButtonElement | HTMLAnchorElement,
+  ButtonProps
+>(
   (
     {
       as = 'button',
@@ -68,14 +71,22 @@ export const Button = forwardRef<any, ButtonProps>(
 
     if (as === 'button') {
       return (
-        <button className={classes} ref={ref} {...(rest as any)}>
+        <button
+          className={classes}
+          ref={ref as React.Ref<HTMLButtonElement>}
+          {...(rest as ButtonButton)}
+        >
           {buildChildren}
         </button>
       );
     }
 
     return (
-      <a className={classes} ref={ref} {...(rest as any)}>
+      <a
+        className={classes}
+        ref={ref as React.Ref<HTMLAnchorElement>}
+        {...(rest as LinkButton)}
+      >
         {buildChildren}
       </a>
     );

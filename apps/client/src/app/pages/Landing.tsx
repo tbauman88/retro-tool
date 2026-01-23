@@ -3,7 +3,7 @@ import { Logo } from '../components/Logo';
 import { UserActions } from '../components/UserActions';
 import { CreateBoardForm } from '../components/CreateBoardForm';
 import { UserBoards } from '../components/UserBoards';
-import { Navigate, useLocation, useSearchParams } from 'react-router-dom';
+import { Navigate, useSearchParams } from 'react-router-dom';
 
 const GithubSvg = ({ className }: { className?: string }) => {
   return (
@@ -24,8 +24,7 @@ const GithubSvg = ({ className }: { className?: string }) => {
 
 const Landing = () => {
   const { user, login, userLoading } = useAuth();
-  const [searchParams, setSearchParams] = useSearchParams();
-  const { search, pathname } = useLocation();
+  const [searchParams] = useSearchParams();
 
   if (userLoading) {
     return null;

@@ -5,17 +5,15 @@ import { User } from '@prisma/client';
 import { PausedState, StartState } from '@retro-tool/api-interfaces';
 
 export const useBoard = (id?: string) => {
-  return useQuery(
-    ['board', id],
-    async () => {
+  return useQuery({
+    queryKey: ['board', id],
+    queryFn: async () => {
       const { data } = await apiClient.get(`/boards/${id}`);
       return data.board as BoardWithColumn;
     },
-    {
-      enabled: id != null,
-      retry: false
-    },
-  );
+    enabled: id != null,
+    retry: false,
+  });
 };
 
 type CreateBoardArgs = {
@@ -27,36 +25,39 @@ type CreateBoardArgs = {
 };
 
 export const useCreateBoard = () => {
-  const { mutateAsync, isLoading } = useMutation((params: CreateBoardArgs) =>
-    apiClient.post('/boards', params),
-  );
+  const { mutateAsync, isPending } = useMutation({
+    mutationFn: (params: CreateBoardArgs) => apiClient.post('/boards', params),
+  });
   return {
     createBoard: mutateAsync,
-    createBoardLoading: isLoading,
+    createBoardLoading: isPending,
   };
 };
 
 export const useUpdateBoard = (id?: string) => {
-  const { mutateAsync, isLoading } = useMutation((data: Partial<CreateBoardArgs>) =>
-    apiClient.patch(`/boards/${id}`, data),
-  );
+  const { mutateAsync, isPending } = useMutation({
+    mutationFn: (data: Partial<CreateBoardArgs>) => apiClient.patch(`/boards/${id}`, data),
+  });
   return {
     updateBoard: mutateAsync,
-    updateBoardLoading: isLoading,
+    updateBoardLoading: isPending,
   };
 };
 
-type BoardWithAccesses = Board & {
+export type BoardWithAccesses = Omit<Board, 'createdAt'> & {
+  createdAt: string;
   boardAccesses: {
     user: User;
   }[];
 };
 
 export const useBoards = () => {
-  return useQuery<BoardWithAccesses[]>(['boards'], async () => {
-    const { data } = await apiClient.get('/boards');
-
-    return data.boards;
+  return useQuery<BoardWithAccesses[]>({
+    queryKey: ['boards'],
+    queryFn: async () => {
+      const { data } = await apiClient.get('/boards');
+      return data.boards;
+    },
   });
 };
 
@@ -65,12 +66,12 @@ type startTimerArgs = {
 };
 
 export const useStartTimer = (boardId: string) => {
-  const { mutateAsync, isLoading } = useMutation((params: startTimerArgs) =>
-    apiClient.post(`/boards/${boardId}/timers`, params),
-  );
+  const { mutateAsync, isPending } = useMutation({
+    mutationFn: (params: startTimerArgs) => apiClient.post(`/boards/${boardId}/timers`, params),
+  });
   return {
     setTimerState: mutateAsync,
-    createBoardLoading: isLoading,
+    createBoardLoading: isPending,
   };
 };
 
@@ -78,11 +79,11 @@ type DeleteBoardArgs = {
   boardId: string;
 };
 export const useDeleteBoard = () => {
-  const { mutateAsync, isLoading } = useMutation((params: DeleteBoardArgs) => {
-    return apiClient.delete(`/boards/${params.boardId}`);
+  const { mutateAsync, isPending } = useMutation({
+    mutationFn: (params: DeleteBoardArgs) => apiClient.delete(`/boards/${params.boardId}`),
   });
   return {
     deleteBoard: mutateAsync,
-    deleteBoardLoading: isLoading,
+    deleteBoardLoading: isPending,
   };
 };

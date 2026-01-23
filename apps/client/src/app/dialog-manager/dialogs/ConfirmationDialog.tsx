@@ -10,7 +10,7 @@ type ConfirmationDialogProps = {
 } & DialogProps;
 
 export default function ConfirmationDialog(props: ConfirmationDialogProps) {
-  const { onCancel, active, title, message, onSuccess, closeDialog } = props;
+  const { onCancel, title, message, onSuccess, closeDialog } = props;
 
   const cancelDialog = () => {
     onCancel?.();
