@@ -3,6 +3,9 @@ name: Deploy
 on:
   push:
     branches: [main]
+  pull_request:
+      branches: [main]
+  workflow_dispatch:
 
 jobs:
   deploy:
@@ -10,19 +13,87 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Set up Docker Build
-        uses: docker/setup-buildx-action@v3
 
-      - name: Install doctl
-        uses: digitalocean/action-doctl@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+          node-version-file: '.nvmrc'
+          cache: 'yarn'
 
-      - name: Log in to DigitalOcean Container Registry with short-lived credentials
-        run: doctl registry login --expiry-seconds 1200
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
 
-      - name: Build image GitHub Container Registry
-        uses: docker/build-push-action@v6
-        with:
-          tags: registry.digitalocean.com/ajoelp/retro-tool:latest
-          push: true
+      - name: Build applications
+        run: yarn build
+
+      - name: Create deployment archive
+        run: |
+          tar -czf deploy.tar.gz \
+            dist/ \
+            node_modules/ \
+            prisma/ \
+            package.json \
+            yarn.lock \
+            .env.example
+
+      - name: Deploy to server
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+          DEPLOY_PASSWORD: ${{ secrets.DEPLOY_PASSWORD }}
+          DEPLOY_PATH: /home/retrotool/app
+        run: |
+          # Install sshpass for password-based authentication
+          sudo apt-get update && sudo apt-get install -y sshpass
+
+          # Create .ssh directory if it doesn't exist
+          mkdir -p ~/.ssh
+
+          # Disable host key checking for this deployment
+          echo "StrictHostKeyChecking no" > ~/.ssh/config
+
+          # Upload deployment archive
+          sshpass -p "$DEPLOY_PASSWORD" scp deploy.tar.gz $DEPLOY_USER@$DEPLOY_HOST:/tmp/
+
+          # Execute deployment script on server
+          sshpass -p "$DEPLOY_PASSWORD" ssh $DEPLOY_USER@$DEPLOY_HOST bash -s << 'ENDSSH'
+          set -e
+
+          # Ensure app directory exists
+          sudo mkdir -p /home/retrotool/app
+          sudo chown -R retrotool:retrotool /home/retrotool
+
+          # Extract deployment
+          sudo -u retrotool bash << 'ENDSU'
+          cd /home/retrotool/app
+
+          # Backup current deployment
+          if [ -d "dist" ]; then
+            tar -czf backup-$(date +%Y%m%d-%H%M%S).tar.gz dist/ || true
+          fi
+
+          # Extract new deployment
+          tar -xzf /tmp/deploy.tar.gz -C /home/retrotool/app
+
+          # Run migrations
+          npx prisma migrate deploy
+
+          # Clean up
+          rm /tmp/deploy.tar.gz
+          ENDSU
+
+          # Restart services
+          sudo systemctl restart retrotool-api retrotool-client
+
+          # Check service status
+          sudo systemctl status retrotool-api --no-pager
+          sudo systemctl status retrotool-client --no-pager
+          ENDSSH
+
+      - name: Verify deployment
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+        run: |
+          echo "Deployment completed!"
+          echo "API should be available at: http://$DEPLOY_HOST:3000"
+          echo "Client should be available at: http://$DEPLOY_HOST:4000"
