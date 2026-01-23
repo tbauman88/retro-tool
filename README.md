@@ -4,9 +4,10 @@ _Logo by Tuan Truong [[github]](https://github.com/tuantruong625) [[website]](ht
 
 <br/>
 
-[![codecov](https://codecov.io/gh/ajoelp/retro-tool/branch/main/graph/badge.svg?token=XSUW0861R1)](https://codecov.io/gh/ajoelp/retro-tool)
-[![API](https://github.com/ajoelp/retro-tool/actions/workflows/api.yml/badge.svg?branch=main)](https://github.com/ajoelp/retro-tool/actions/workflows/api.yml)
-[![API](https://github.com/ajoelp/retro-tool/actions/workflows/client.yml/badge.svg?branch=main)](https://github.com/ajoelp/retro-tool/actions/workflows/client.yml)
+[![codecov](https://codecov.io/github/tbauman88/retro-tool/graph/badge.svg?token=4RTSOHKGHW)](https://codecov.io/github/tbauman88/retro-tool)
+[![Client](https://github.com/tbauman88/retro-tool/actions/workflows/client.yml/badge.svg)](https://github.com/tbauman88/retro-tool/actions/workflows/client.yml)
+[![API](https://github.com/tbauman88/retro-tool/actions/workflows/api.yml/badge.svg)](https://github.com/tbauman88/retro-tool/actions/workflows/api.yml)
+[![E2E](https://github.com/tbauman88/retro-tool/actions/workflows/cypress.yml/badge.svg)](https://github.com/tbauman88/retro-tool/actions/workflows/cypress.yml)
 
 ## Development
 
