@@ -96,8 +96,8 @@ const containerClasses = ({ isDragging, isGroupedOver, highlightCard }: Containe
   );
 };
 
-type CounterProps = { value: number };
-function Counter({ value }: CounterProps) {
+type CounterProps = { value: number; testId?: string };
+function Counter({ value, testId }: CounterProps) {
   const [current, setCurrent] = useState(value ?? 0);
   const nodeRef = useRef<HTMLParagraphElement>(null);
 
@@ -118,7 +118,7 @@ function Counter({ value }: CounterProps) {
     return () => controls.stop();
   }, [current, value]);
 
-  return <p ref={nodeRef} />;
+  return <p ref={nodeRef} data-testid={testId} />;
 }
 
 type CardWrapperProps = {
@@ -199,7 +199,7 @@ export const CardWrapper = ({ card, isDragging, isGroupedOver, hasChildren, inde
           <CardVotesButton onClick={() => voteCard({ increment: true })} data-testid={`upvote-button-${index}`}>
             <ArrowUpIcon className="w-6 h-6" />
           </CardVotesButton>
-          <Counter value={card.votes} />
+          <Counter value={card.votes} testId={`vote-count-${index}`} />
           <CardVotesButton onClick={() => voteCard({ increment: false })} data-testid={`downvote-button-${index}`}>
             <ArrowDownIcon className="w-6 h-6" />
           </CardVotesButton>

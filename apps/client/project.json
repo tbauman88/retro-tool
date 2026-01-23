@@ -1,8 +1,9 @@
 {
-  "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "name": "client",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/client/src",
   "projectType": "application",
+  "tags": [],
   "targets": {
     "build": {
       "executor": "@nx/webpack:webpack",
@@ -74,7 +75,19 @@
         "jestConfig": "apps/client/jest.config.ts",
         "passWithNoTests": true
       }
+    },
+    "e2e": {
+      "executor": "@nx/cypress:cypress",
+      "options": {
+        "cypressConfig": "apps/client/cypress.config.ts",
+        "testingType": "e2e",
+        "devServerTarget": "client:serve"
+      },
+      "configurations": {
+        "production": {
+          "devServerTarget": "client:serve:production"
+        }
+      }
     }
-  },
-  "tags": []
+  }
 }
