@@ -27,7 +27,8 @@ jobs:
         env:
           TEST_DATABASE_URL: 'postgresql://user:password@localhost:5432/database?schema=public'
         run: yarn test:api --codeCoverage --verbose
-      - uses: codecov/codecov-action@v4
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           flags: api
