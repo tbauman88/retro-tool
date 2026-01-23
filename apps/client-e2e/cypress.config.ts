@@ -15,5 +15,8 @@ export default defineConfig({
     screenshotsFolder: '../../dist/cypress/apps/client-e2e/screenshots',
     chromeWebSecurity: false,
     modifyObstructiveCode: false,
+    env: {
+      apiUrl: 'http://127.0.0.1:3333',
+    },
   },
 });

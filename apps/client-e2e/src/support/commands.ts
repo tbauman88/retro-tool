@@ -24,7 +24,8 @@ Cypress.Commands.add('getBySel', (selector, ...args) => {
 
 // -- This is a parent command --
 Cypress.Commands.add('login', (email) => {
-  cy.request("POST", "http://localhost:3333/auth/mock", { email }).as('userLoad').then(response => {
+  const apiUrl = Cypress.env('apiUrl') || 'http://127.0.0.1:3333';
+  cy.request("POST", `${apiUrl}/auth/mock`, { email }).as('userLoad').then(response => {
     expect(response).to.have.property('body')
     cy.setCookie('auth_token', `Bearer ${response.body.token}`)
     cy.reload()
@@ -33,9 +34,10 @@ Cypress.Commands.add('login', (email) => {
 
 
 Cypress.Commands.add('newBoard', (boardName = "New Board", columns = ['good', 'bad', 'worse']) => {
+  const apiUrl = Cypress.env('apiUrl') || 'http://127.0.0.1:3333';
   cy.getCookie('auth_token').then(token => {
     cy.request({
-      url: "http://localhost:3333/boards",
+      url: `${apiUrl}/boards`,
       method: 'POST',
       body: { title: boardName, columns },
       headers: {
