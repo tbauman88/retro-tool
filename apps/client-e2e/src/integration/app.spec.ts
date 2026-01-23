@@ -65,7 +65,7 @@ describe('client', () => {
     cy.getBySel('vote-count-0').contains(0);
   });
 
-  it.only('will add and remove columns', () => {
+  it('will add and remove columns', () => {
     cy.login('test-user-1@example.com');
     cy.newBoard();
 

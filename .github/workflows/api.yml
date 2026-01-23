@@ -19,6 +19,8 @@ jobs:
       - uses: actions/checkout@v4
       - name: Setup Node.js and Yarn
         uses: ./.github/actions/setup-node-yarn
+      - name: Generate Prisma Client
+        run: yarn prisma generate
       - name: Check Lint
         run: yarn lint api
       - name: Test
