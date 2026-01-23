@@ -16,7 +16,7 @@ export class BoardRepository {
   async updateTimerState(id: string, state: Prisma.InputJsonValue) {
     const board = await prisma.board.update({
       where: { id },
-      data: {timer: state}
+      data: { timer: state as Prisma.InputJsonValue }
     })
 
     dependencies.namespaceService.sendEventToBoard(board.id, {

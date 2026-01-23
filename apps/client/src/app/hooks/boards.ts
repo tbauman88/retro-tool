@@ -44,7 +44,8 @@ export const useUpdateBoard = (id?: string) => {
   };
 };
 
-type BoardWithAccesses = Board & {
+export type BoardWithAccesses = Omit<Board, 'createdAt'> & {
+  createdAt: string;
   boardAccesses: {
     user: User;
   }[];

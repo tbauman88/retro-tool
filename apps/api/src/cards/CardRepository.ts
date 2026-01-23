@@ -97,7 +97,7 @@ export class CardRepository {
 
     // If the cards are grouped
     if (payload.parentId != null) {
-      const parentCard = await this.getCardById(payload.parentId);
+      const parentCard = await this.getCardById(payload.parentId as string);
 
       if (card.draft) {
         dependencies.namespaceService.sendEventToUser(card.ownerId, card.column.boardId, {
